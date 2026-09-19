@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://sye.syetech.workers.dev/</loc>
+    <xhtml:link rel="alternate" hreflang="he" href="https://sye.syetech.workers.dev/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sye.syetech.workers.dev/index_46_en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sye.syetech.workers.dev/"/>
+  </url>
+  <url>
+    <loc>https://sye.syetech.workers.dev/index_46_en.html</loc>
+    <xhtml:link rel="alternate" hreflang="he" href="https://sye.syetech.workers.dev/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sye.syetech.workers.dev/index_46_en.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sye.syetech.workers.dev/"/>
+  </url>
+</urlset>
