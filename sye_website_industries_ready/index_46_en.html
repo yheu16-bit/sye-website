@@ -21,8 +21,9 @@
     --paper:#F5F6F8;
     --white:#FFFFFF;
     --ink:#101820;
-    --accent:#2E7DD1;
+    --accent:#2A73C0;
     --accent-light:#5FA8F0;
+    --steel-light-text:#66707D;
     --accent-glow: rgba(95,168,240,0.18);
     --line: rgba(16,24,32,0.10);
     --line-dark: rgba(255,255,255,0.14);
@@ -54,6 +55,23 @@
   a:focus-visible, button:focus-visible{
     outline:2px solid var(--accent-light);
     outline-offset:3px;
+  }
+
+  /* skip link */
+  .skip-link{
+    position:absolute;
+    inset-inline-start:-9999px;
+    top:0;
+    z-index:1000;
+    background:var(--navy);
+    color:#fff;
+    padding:0.9rem 1.4rem;
+    font-weight:700;
+    font-size:0.95rem;
+  }
+  .skip-link:focus{
+    inset-inline-start:0.5rem;
+    top:0.5rem;
   }
 
   /* blueprint grid backdrop */
@@ -226,10 +244,15 @@
     padding:2rem 1.5rem;
     flex-direction:column; gap:1.4rem;
     transform:translateY(-12px); opacity:0; pointer-events:none;
-    transition:.3s ease;
+    visibility:hidden;
+    transition:opacity .3s ease, transform .3s ease, visibility 0s linear .3s;
     overflow-y:auto;
   }
-  .mobile-panel.open{ opacity:1; transform:translateY(0); pointer-events:auto; }
+  .mobile-panel.open{
+    opacity:1; transform:translateY(0); pointer-events:auto;
+    visibility:visible;
+    transition:opacity .3s ease, transform .3s ease, visibility 0s linear 0s;
+  }
   .mobile-panel a{ color:#fff; font-size:1.15rem; font-weight:600; border-bottom:1px solid var(--line-dark); padding-bottom:1.1rem;}
   .mobile-panel a:focus-visible{ outline:2px solid var(--accent-light); outline-offset:4px; }
 
@@ -446,7 +469,7 @@
     font-family:'Space Mono',monospace; font-size:0.7rem; letter-spacing:0.08em;
     color:var(--accent); text-transform:uppercase; margin-bottom:0.4rem; display:block;
   }
-  .founder-box h4{ font-size:1.15rem; color:var(--navy); margin-bottom:0.5rem;}
+  .founder-box h3{ font-size:1.15rem; color:var(--navy); margin-bottom:0.5rem;}
   .founder-box p{ color:var(--steel); font-size:0.96rem; }
 
   /* ===== INDUSTRIES ===== */
@@ -630,7 +653,7 @@
     font-family:'Space Mono',monospace; color:var(--accent-light); font-size:0.95rem;
     position:relative; z-index:2;
   }
-  .proc-step h4{ font-size:0.98rem; color:#fff; margin-bottom:0.5rem;}
+  .proc-step h3{ font-size:0.98rem; color:#fff; margin-bottom:0.5rem;}
   .proc-step p{ font-size:0.82rem; color:rgba(255,255,255,0.6); }
 
   @media(max-width:900px){
@@ -649,7 +672,7 @@
     border:1px solid var(--accent); width:30px; height:30px; flex:none;
     display:flex; align-items:center; justify-content:center; margin-top:0.15rem;
   }
-  .why-list h4{ color:var(--navy); font-size:1.03rem; margin-bottom:0.35rem;}
+  .why-list h3{ color:var(--navy); font-size:1.03rem; margin-bottom:0.35rem;}
   .why-list p{ color:var(--steel); font-size:0.92rem; }
   .why-media{ position:relative; }
   .why-media img{ width:100%; }
@@ -684,7 +707,7 @@
   .contact-card h3{ font-size:1.3rem; color:var(--navy); margin-bottom:1rem;}
   .contact-card p{ color:var(--steel); font-size:0.93rem; margin-bottom:1.6rem;}
   .field-note{
-    font-family:'Space Mono',monospace; font-size:0.72rem; color:var(--steel-light);
+    font-family:'Space Mono',monospace; font-size:0.72rem; color:var(--steel-light-text);
     border:1px dashed var(--line); padding:0.9rem; margin-bottom:1.2rem;
   }
   .lead-form{ display:flex; flex-direction:column; gap:0.9rem; margin-bottom:1.2rem; }
@@ -699,12 +722,24 @@
   }
   .lead-form input:focus, .lead-form textarea:focus{
     outline:none; border-color:var(--accent); background:#fff;
+    box-shadow:0 0 0 3px var(--accent-glow);
   }
+  .lead-form input[aria-invalid="true"], .lead-form textarea[aria-invalid="true"]{
+    border-color:#C0392B;
+  }
+  .form-error{
+    display:block; color:#C0392B; font-size:0.8rem; margin-top:0.4rem; font-weight:600;
+  }
+  .form-error[hidden]{ display:none; }
   .lead-form textarea{ resize:vertical; min-height:80px; }
   .lead-form .req{ color:var(--accent); }
   .lead-form-note{
-    font-size:0.78rem; color:var(--steel-light); margin-top:-0.3rem; margin-bottom:0.2rem;
+    font-size:0.78rem; color:var(--steel-light-text); margin-top:-0.3rem; margin-bottom:0.2rem;
   }
+  .privacy-note{
+    font-size:0.74rem; line-height:1.5; color:var(--steel-light-text); margin-bottom:0.9rem;
+  }
+  .privacy-note a{ color:var(--accent); text-decoration:underline; }
 
   /* ===== FOOTER ===== */
   footer{ background:#081522; color:rgba(255,255,255,0.55); padding:2.6rem 0; }
@@ -712,7 +747,11 @@
   .footer-inner .brand{ color:#fff; font-size:0.95rem;}
   .footer-inner .brand img{ height:28px; }
   .footer-links{ display:flex; gap:1.4rem; font-size:0.85rem; }
-  .footer-fine{ font-family:'Space Mono',monospace; font-size:0.7rem; margin-top:1.6rem; opacity:0.6; text-align:center;}
+  .footer-fine{ font-family:'Space Mono',monospace; font-size:0.7rem; margin-top:1.6rem; text-align:center;}
+  .footer-legal{ text-align:center; font-size:0.82rem; margin-top:1.1rem; }
+  .footer-legal a{ color:rgba(255,255,255,0.78); text-decoration:underline; }
+  .footer-legal a:hover{ color:var(--accent-light); }
+  .footer-legal span{ margin:0 0.5em; color:rgba(255,255,255,0.4); }
 
   /* ===== reveal animation ===== */
   .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
@@ -740,6 +779,7 @@
 </style>
 </head>
 <body>
+<a href="#top" class="skip-link">Skip to main content</a>
 
 <header id="siteHeader">
   <div class="wrap nav-inner">
@@ -769,7 +809,7 @@
   </div>
 </header>
 
-<div class="mobile-panel" id="mobilePanel">
+<div class="mobile-panel" id="mobilePanel" role="navigation" aria-label="Mobile navigation">
   <div class="lang-switch lang-switch-mobile" role="group" aria-label="Language Selector">
     <a href="index_46_he.html" class="lang-link" aria-label="Switch to Hebrew">עברית</a>
     <span class="lang-sep" aria-hidden="true">|</span>
@@ -783,7 +823,7 @@
   <a href="#contact">Contact</a>
 </div>
 
-<main id="top">
+<main id="top" tabindex="-1">
 
   <!-- HERO -->
   <section class="hero">
@@ -841,7 +881,7 @@
         <p>The company follows a structured engineering design methodology, from understanding the need, defining requirements and specifying the system, through design, manufacturing and integration, to testing, delivery and ongoing engineering support.</p>
         <div class="founder-box">
           <span class="role">Multidisciplinary Teams</span>
-          <h4>Integrated Expertise. Full Accountability.</h4>
+          <h3>Integrated Expertise. Full Accountability.</h3>
           <p>Our teams combine knowledge and experience in engineering, quality assurance and project management. A dedicated professional team is assembled for each project according to its requirements, with the goal of leading it from the initial need to an operational, tested system ready for field use.</p>
         </div>
       </div>
@@ -995,7 +1035,7 @@
         <p>A selection of company projects demonstrating the breadth of our engineering capabilities across different industries.</p>
       </div>
 
-      <div class="filters reveal" role="tablist" aria-label="Project Filters">
+      <div class="filters reveal" role="group" aria-label="Project Filters">
         <button class="filter-btn active" data-filter="all">All</button>
         <button class="filter-btn" data-filter="industry">Industrial</button>
         <button class="filter-btn" data-filter="medical">Medical</button>
@@ -1118,27 +1158,27 @@
       <div class="process-track reveal">
         <div class="proc-step">
           <div class="dot">01</div>
-          <h4>Understanding the Need</h4>
+          <h3>Understanding the Need</h3>
           <p>Understanding the engineering requirement, system constraints and technology priorities.</p>
         </div>
         <div class="proc-step">
           <div class="dot">02</div>
-          <h4>Concept Development</h4>
+          <h3>Concept Development</h3>
           <p>Defining the system architecture and its internal and external interfaces.</p>
         </div>
         <div class="proc-step">
           <div class="dot">03</div>
-          <h4>Engineering Design</h4>
+          <h3>Engineering Design</h3>
           <p>Detailed design of the subsystems, review and approval before release to manufacturing.</p>
         </div>
         <div class="proc-step">
           <div class="dot">04</div>
-          <h4>Manufacturing and Integration</h4>
+          <h3>Manufacturing and Integration</h3>
           <p>Manufacturing, assembly and integration of the mechanical, hydraulic and control subsystems.</p>
         </div>
         <div class="proc-step">
           <div class="dot">05</div>
-          <h4>Testing, Delivery and Support</h4>
+          <h3>Testing, Delivery and Support</h3>
           <p>System testing against quality and safety requirements, delivery and ongoing engineering support.</p>
         </div>
       </div>
@@ -1153,19 +1193,19 @@
         <ul class="why-list">
           <li>
             <span class="mark mono">01</span>
-            <div><h4>Multidisciplinary Hands-On Experience</h4><p>Integrating mechanical, hydraulic, pneumatic and control capabilities under one roof, eliminating the need to coordinate separate suppliers.</p></div>
+            <div><h3>Multidisciplinary Hands-On Experience</h3><p>Integrating mechanical, hydraulic, pneumatic and control capabilities under one roof, eliminating the need to coordinate separate suppliers.</p></div>
           </li>
           <li>
             <span class="mark mono">02</span>
-            <div><h4>Full or Partial Support, as Needed</h4><p>We can join at any stage, from initial consulting to a complete turnkey project including manufacturing and integration.</p></div>
+            <div><h3>Full or Partial Support, as Needed</h3><p>We can join at any stage, from initial consulting to a complete turnkey project including manufacturing and integration.</p></div>
           </li>
           <li>
             <span class="mark mono">03</span>
-            <div><h4>Structured Work Methodology</h4><p>Every project is documented according to defined milestones (SRR/SDR/PDR/CDR/ATP) to reduce uncertainty and maintain quality.</p></div>
+            <div><h3>Structured Work Methodology</h3><p>Every project is documented according to defined milestones (SRR/SDR/PDR/CDR/ATP) to reduce uncertainty and maintain quality.</p></div>
           </li>
           <li>
             <span class="mark mono">04</span>
-            <div><h4>Precisely Tailored to the Need, Not an Off-the-Shelf Solution</h4><p>Every system is built around the specific requirements of the client and the process, including sensitive and controlled environments.</p></div>
+            <div><h3>Precisely Tailored to the Need, Not an Off-the-Shelf Solution</h3><p>Every system is built around the specific requirements of the client and the process, including sensitive and controlled environments.</p></div>
           </li>
         </ul>
       </div>
@@ -1205,11 +1245,15 @@
         <form class="lead-form" id="leadForm">
           <div>
             <label for="leadName">Full Name <span class="req">*</span></label>
-            <input type="text" id="leadName" name="name" required placeholder="Your Name">
+            <input type="text" id="leadName" name="name" required aria-required="true"
+                   aria-describedby="leadNameError" aria-invalid="false" placeholder="Your Name">
+            <span id="leadNameError" class="form-error" role="alert" hidden>Please enter your full name</span>
           </div>
           <div>
             <label for="leadPhone">Phone <span class="req">*</span></label>
-            <input type="tel" id="leadPhone" name="phone" required placeholder="050 0000000">
+            <input type="tel" id="leadPhone" name="phone" required aria-required="true"
+                   aria-describedby="leadPhoneError" aria-invalid="false" dir="ltr" placeholder="050 0000000">
+            <span id="leadPhoneError" class="form-error" role="alert" hidden>Please enter a phone number</span>
           </div>
           <div>
             <label for="leadMsg">About the Project</label>
@@ -1217,6 +1261,7 @@
           </div>
         </form>
         <div class="lead-form-note">Clicking Send will open a ready-to-send WhatsApp message containing the details you entered.</div>
+        <p class="privacy-note">Submitting your details is voluntary and not a legal requirement. Your details will be used by S.Y.E Technological Solutions Ltd. to handle your inquiry and get in touch with you. Submission is done via WhatsApp. For more information, including your rights to review and correct your data, see our <a href="privacy-policy-en.html">Privacy Policy</a>.</p>
         <button type="submit" form="leadForm" class="btn btn-primary" style="width:100%; justify-content:center;">Send Details via WhatsApp</button>
       </div>
     </div>
@@ -1236,6 +1281,11 @@
       <a href="#contact">Contact</a>
     </div>
   </div>
+  <div class="footer-legal">
+    <a href="accessibility-statement-en.html">Accessibility Statement</a>
+    <span aria-hidden="true">|</span>
+    <a href="privacy-policy-en.html">Privacy Policy</a>
+  </div>
   <div class="footer-fine">© S.Y.E TECHNOLOGICAL SOLUTIONS LTD. All rights reserved.</div>
 </footer>
 
@@ -1249,15 +1299,29 @@
   // mobile menu
   const burger = document.getElementById('burgerBtn');
   const panel = document.getElementById('mobilePanel');
+  function closeMobilePanel(returnFocus){
+    panel.classList.remove('open'); burger.classList.remove('open');
+    burger.setAttribute('aria-expanded','false');
+    if (returnFocus) burger.focus();
+  }
   burger.addEventListener('click', () => {
     const open = panel.classList.toggle('open');
     burger.classList.toggle('open', open);
     burger.setAttribute('aria-expanded', open ? 'true':'false');
   });
-  panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    panel.classList.remove('open'); burger.classList.remove('open');
-    burger.setAttribute('aria-expanded','false');
-  }));
+  panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => closeMobilePanel(false)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && panel.classList.contains('open')) closeMobilePanel(true);
+  });
+
+  // hero video: respect reduced-motion preference
+  const heroVideo = document.querySelector('.hero-video');
+  if (heroVideo) {
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const applyMotionPref = () => { if (motionQuery.matches) heroVideo.pause(); else heroVideo.play().catch(() => {}); };
+    applyMotionPref();
+    motionQuery.addEventListener('change', applyMotionPref);
+  }
 
   // reveal on scroll
   const io = new IntersectionObserver((entries) => {
@@ -1268,10 +1332,12 @@
   // project filters
   const filterBtns = document.querySelectorAll('.filter-btn');
   const cards = document.querySelectorAll('.proj-card');
+  filterBtns.forEach(btn => btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false'));
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
+      filterBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed','true');
       const f = btn.dataset.filter;
       cards.forEach(c => {
         const show = f === 'all' || c.dataset.cat.split(' ').includes(f);
@@ -1282,11 +1348,19 @@
   // lead form -> WhatsApp
   const leadForm = document.getElementById('leadForm');
   if (leadForm) {
+    const setFieldError = (input, errorEl, hasError) => {
+      input.setAttribute('aria-invalid', hasError ? 'true' : 'false');
+      errorEl.hidden = !hasError;
+    };
     leadForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const name = leadForm.name.value.trim();
       const phone = leadForm.phone.value.trim();
       const msg = leadForm.message.value.trim();
+      const nameError = document.getElementById('leadNameError');
+      const phoneError = document.getElementById('leadPhoneError');
+      setFieldError(leadForm.name, nameError, !name);
+      setFieldError(leadForm.phone, phoneError, !phone);
       if (!name || !phone) {
         if (!name) leadForm.name.focus(); else leadForm.phone.focus();
         return;

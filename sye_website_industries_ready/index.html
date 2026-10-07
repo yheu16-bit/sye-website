@@ -21,8 +21,9 @@
     --paper:#F5F6F8;
     --white:#FFFFFF;
     --ink:#101820;
-    --accent:#2E7DD1;
+    --accent:#2A73C0;
     --accent-light:#5FA8F0;
+    --steel-light-text:#66707D;
     --accent-glow: rgba(95,168,240,0.18);
     --line: rgba(16,24,32,0.10);
     --line-dark: rgba(255,255,255,0.14);
@@ -54,6 +55,23 @@
   a:focus-visible, button:focus-visible{
     outline:2px solid var(--accent-light);
     outline-offset:3px;
+  }
+
+  /* skip link */
+  .skip-link{
+    position:absolute;
+    inset-inline-start:-9999px;
+    top:0;
+    z-index:1000;
+    background:var(--navy);
+    color:#fff;
+    padding:0.9rem 1.4rem;
+    font-weight:700;
+    font-size:0.95rem;
+  }
+  .skip-link:focus{
+    inset-inline-start:0.5rem;
+    top:0.5rem;
   }
 
   /* blueprint grid backdrop */
@@ -227,10 +245,15 @@
     padding:2rem 1.5rem;
     flex-direction:column; gap:1.4rem;
     transform:translateY(-12px); opacity:0; pointer-events:none;
-    transition:.3s ease;
+    visibility:hidden;
+    transition:opacity .3s ease, transform .3s ease, visibility 0s linear .3s;
     overflow-y:auto;
   }
-  .mobile-panel.open{ opacity:1; transform:translateY(0); pointer-events:auto; }
+  .mobile-panel.open{
+    opacity:1; transform:translateY(0); pointer-events:auto;
+    visibility:visible;
+    transition:opacity .3s ease, transform .3s ease, visibility 0s linear 0s;
+  }
   .mobile-panel a{ color:#fff; font-size:1.15rem; font-weight:600; border-bottom:1px solid var(--line-dark); padding-bottom:1.1rem;}
   .mobile-panel a:focus-visible{ outline:2px solid var(--accent-light); outline-offset:4px; }
 
@@ -436,7 +459,7 @@
     font-family:'Space Mono',monospace; font-size:0.7rem; letter-spacing:0.08em;
     color:var(--accent); text-transform:uppercase; margin-bottom:0.4rem; display:block;
   }
-  .founder-box h4{ font-size:1.15rem; color:var(--navy); margin-bottom:0.5rem;}
+  .founder-box h3{ font-size:1.15rem; color:var(--navy); margin-bottom:0.5rem;}
   .founder-box p{ color:var(--steel); font-size:0.96rem; }
 
   /* ===== INDUSTRIES ===== */
@@ -620,7 +643,7 @@
     font-family:'Space Mono',monospace; color:var(--accent-light); font-size:0.95rem;
     position:relative; z-index:2;
   }
-  .proc-step h4{ font-size:0.98rem; color:#fff; margin-bottom:0.5rem;}
+  .proc-step h3{ font-size:0.98rem; color:#fff; margin-bottom:0.5rem;}
   .proc-step p{ font-size:0.82rem; color:rgba(255,255,255,0.6); }
 
   @media(max-width:900px){
@@ -639,7 +662,7 @@
     border:1px solid var(--accent); width:30px; height:30px; flex:none;
     display:flex; align-items:center; justify-content:center; margin-top:0.15rem;
   }
-  .why-list h4{ color:var(--navy); font-size:1.03rem; margin-bottom:0.35rem;}
+  .why-list h3{ color:var(--navy); font-size:1.03rem; margin-bottom:0.35rem;}
   .why-list p{ color:var(--steel); font-size:0.92rem; }
   .why-media{ position:relative; }
   .why-media img{ width:100%; }
@@ -674,7 +697,7 @@
   .contact-card h3{ font-size:1.3rem; color:var(--navy); margin-bottom:1rem;}
   .contact-card p{ color:var(--steel); font-size:0.93rem; margin-bottom:1.6rem;}
   .field-note{
-    font-family:'Space Mono',monospace; font-size:0.72rem; color:var(--steel-light);
+    font-family:'Space Mono',monospace; font-size:0.72rem; color:var(--steel-light-text);
     border:1px dashed var(--line); padding:0.9rem; margin-bottom:1.2rem;
   }
   .lead-form{ display:flex; flex-direction:column; gap:0.9rem; margin-bottom:1.2rem; }
@@ -689,12 +712,24 @@
   }
   .lead-form input:focus, .lead-form textarea:focus{
     outline:none; border-color:var(--accent); background:#fff;
+    box-shadow:0 0 0 3px var(--accent-glow);
   }
+  .lead-form input[aria-invalid="true"], .lead-form textarea[aria-invalid="true"]{
+    border-color:#C0392B;
+  }
+  .form-error{
+    display:block; color:#C0392B; font-size:0.8rem; margin-top:0.4rem; font-weight:600;
+  }
+  .form-error[hidden]{ display:none; }
   .lead-form textarea{ resize:vertical; min-height:80px; }
   .lead-form .req{ color:var(--accent); }
   .lead-form-note{
-    font-size:0.78rem; color:var(--steel-light); margin-top:-0.3rem; margin-bottom:0.2rem;
+    font-size:0.78rem; color:var(--steel-light-text); margin-top:-0.3rem; margin-bottom:0.2rem;
   }
+  .privacy-note{
+    font-size:0.74rem; line-height:1.5; color:var(--steel-light-text); margin-bottom:0.9rem;
+  }
+  .privacy-note a{ color:var(--accent); text-decoration:underline; }
 
   /* ===== FOOTER ===== */
   footer{ background:#081522; color:rgba(255,255,255,0.55); padding:2.6rem 0; }
@@ -702,7 +737,11 @@
   .footer-inner .brand{ color:#fff; font-size:0.95rem;}
   .footer-inner .brand img{ height:28px; }
   .footer-links{ display:flex; gap:1.4rem; font-size:0.85rem; }
-  .footer-fine{ font-family:'Space Mono',monospace; font-size:0.7rem; margin-top:1.6rem; opacity:0.6; text-align:center;}
+  .footer-fine{ font-family:'Space Mono',monospace; font-size:0.7rem; margin-top:1.6rem; text-align:center;}
+  .footer-legal{ text-align:center; font-size:0.82rem; margin-top:1.1rem; }
+  .footer-legal a{ color:rgba(255,255,255,0.78); text-decoration:underline; }
+  .footer-legal a:hover{ color:var(--accent-light); }
+  .footer-legal span{ margin:0 0.5em; color:rgba(255,255,255,0.4); }
 
   /* ===== reveal animation ===== */
   .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease; }
@@ -730,6 +769,7 @@
 </style>
 </head>
 <body>
+<a href="#top" class="skip-link">דלג לתוכן הראשי</a>
 
 <header id="siteHeader">
   <div class="wrap nav-inner">
@@ -759,7 +799,7 @@
   </div>
 </header>
 
-<div class="mobile-panel" id="mobilePanel">
+<div class="mobile-panel" id="mobilePanel" role="navigation" aria-label="ניווט נייד">
   <div class="lang-switch lang-switch-mobile" role="group" aria-label="בחירת שפה">
     <span class="lang-link lang-current" aria-current="true">עברית</span>
     <span class="lang-sep" aria-hidden="true">|</span>
@@ -773,7 +813,7 @@
   <a href="#contact">יצירת קשר</a>
 </div>
 
-<main id="top">
+<main id="top" tabindex="-1">
 
   <!-- HERO -->
   <section class="hero">
@@ -831,7 +871,7 @@
         <p>החברה פועלת לפי מתודולוגיית תכן סדורה, החל מלימוד הצורך, הגדרת הדרישות ואפיון המערכת, דרך תכנון, ייצור ואינטגרציה, ועד לבדיקות, מסירה ותמיכה הנדסית שוטפת.</p>
         <div class="founder-box">
           <span class="role">צוותים רב תחומיים</span>
-          <h4>מומחיות משולבת. אחריות כוללת.</h4>
+          <h3>מומחיות משולבת. אחריות כוללת.</h3>
           <p>צוותי החברה משלבים ידע וניסיון בתחומי ההנדסה, בקרת האיכות וניהול הפרויקטים. לכל פרויקט נבנה צוות מקצועי המותאם לדרישותיו, במטרה להוביל אותו משלב הצורך ועד למערכת פעילה, בדוקה ומוכנה לעבודה בשטח.</p>
         </div>
       </div>
@@ -985,7 +1025,7 @@
         <p>מבחר מפרויקטי החברה, המדגימים את רוחב היכולות ההנדסיות בין תחומי הפעילות השונים.</p>
       </div>
 
-      <div class="filters reveal" role="tablist" aria-label="סינון פרויקטים">
+      <div class="filters reveal" role="group" aria-label="סינון פרויקטים">
         <button class="filter-btn active" data-filter="all">הכל</button>
         <button class="filter-btn" data-filter="industry">תעשייה</button>
         <button class="filter-btn" data-filter="medical">רפואה</button>
@@ -1108,27 +1148,27 @@
       <div class="process-track reveal">
         <div class="proc-step">
           <div class="dot">01</div>
-          <h4>לימוד הצורך</h4>
+          <h3>לימוד הצורך</h3>
           <p>הבנת הדרישה ההנדסית, אילוצי המערכת וסדר העדיפויות הטכנולוגי.</p>
         </div>
         <div class="proc-step">
           <div class="dot">02</div>
-          <h4>גיבוש קונספט</h4>
+          <h3>גיבוש קונספט</h3>
           <p>בניית ארכיטקטורת המערכת והממשקים הפנימיים והחיצוניים.</p>
         </div>
         <div class="proc-step">
           <div class="dot">03</div>
-          <h4>תכנון הנדסי</h4>
+          <h3>תכנון הנדסי</h3>
           <p>תכן מפורט של תת המערכות, בחינה ואישור טרם יציאה לייצור.</p>
         </div>
         <div class="proc-step">
           <div class="dot">04</div>
-          <h4>ייצור ואינטגרציה</h4>
+          <h3>ייצור ואינטגרציה</h3>
           <p>ייצור, הרכבה ואינטגרציה בין תתי המערכות המכניות, ההידראוליות והבקרתיות.</p>
         </div>
         <div class="proc-step">
           <div class="dot">05</div>
-          <h4>בדיקות, מסירה וליווי</h4>
+          <h3>בדיקות, מסירה וליווי</h3>
           <p>בדיקות מערכת מול דרישות האיכות והבטיחות, מסירה ותמיכה הנדסית שוטפת.</p>
         </div>
       </div>
@@ -1143,19 +1183,19 @@
         <ul class="why-list">
           <li>
             <span class="mark mono">01</span>
-            <div><h4>ניסיון מעשי רב תחומי</h4><p>שילוב יכולות מכניקה, הידראוליקה, פנאומטיקה ובקרה תחת קורת גג אחת, במקום תיאום בין ספקים נפרדים.</p></div>
+            <div><h3>ניסיון מעשי רב תחומי</h3><p>שילוב יכולות מכניקה, הידראוליקה, פנאומטיקה ובקרה תחת קורת גג אחת, במקום תיאום בין ספקים נפרדים.</p></div>
           </li>
           <li>
             <span class="mark mono">02</span>
-            <div><h4>ליווי מלא או חלקי, לפי הצורך</h4><p>אפשר להיכנס בכל שלב, מייעוץ ראשוני ועד לפרויקט "מפתח בכף היד" הכולל ייצור ואינטגרציה.</p></div>
+            <div><h3>ליווי מלא או חלקי, לפי הצורך</h3><p>אפשר להיכנס בכל שלב, מייעוץ ראשוני ועד לפרויקט "מפתח בכף היד" הכולל ייצור ואינטגרציה.</p></div>
           </li>
           <li>
             <span class="mark mono">03</span>
-            <div><h4>עבודה במתודולוגיה מובנית</h4><p>כל פרויקט מתועד לפי אבני דרך מוגדרות (SRR/SDR/PDR/CDR/ATP), כדי לצמצם אי ודאות ולשמור על איכות.</p></div>
+            <div><h3>עבודה במתודולוגיה מובנית</h3><p>כל פרויקט מתועד לפי אבני דרך מוגדרות (SRR/SDR/PDR/CDR/ATP), כדי לצמצם אי ודאות ולשמור על איכות.</p></div>
           </li>
           <li>
             <span class="mark mono">04</span>
-            <div><h4>התאמה מדויקת לצורך, לא פתרון מדף</h4><p>כל מערכת נבנית סביב הדרישה הספציפית של הלקוח והתהליך, כולל בסביבות רגישות ומבוקרות.</p></div>
+            <div><h3>התאמה מדויקת לצורך, לא פתרון מדף</h3><p>כל מערכת נבנית סביב הדרישה הספציפית של הלקוח והתהליך, כולל בסביבות רגישות ומבוקרות.</p></div>
           </li>
         </ul>
       </div>
@@ -1195,11 +1235,15 @@
         <form class="lead-form" id="leadForm">
           <div>
             <label for="leadName">שם מלא <span class="req">*</span></label>
-            <input type="text" id="leadName" name="name" required placeholder="השם שלכם">
+            <input type="text" id="leadName" name="name" required aria-required="true"
+                   aria-describedby="leadNameError" aria-invalid="false" placeholder="השם שלכם">
+            <span id="leadNameError" class="form-error" role="alert" hidden>נא למלא שם מלא</span>
           </div>
           <div>
             <label for="leadPhone">טלפון <span class="req">*</span></label>
-            <input type="tel" id="leadPhone" name="phone" required placeholder="050 0000000">
+            <input type="tel" id="leadPhone" name="phone" required aria-required="true"
+                   aria-describedby="leadPhoneError" aria-invalid="false" dir="ltr" placeholder="050 0000000">
+            <span id="leadPhoneError" class="form-error" role="alert" hidden>נא למלא מספר טלפון</span>
           </div>
           <div>
             <label for="leadMsg">קצת על הפרויקט</label>
@@ -1207,6 +1251,7 @@
           </div>
         </form>
         <div class="lead-form-note">בלחיצה על השליחה תיפתח הודעת WhatsApp מוכנה עם הפרטים שמילאתם, ישירות אלינו.</div>
+        <p class="privacy-note">מסירת הפרטים היא מרצונך ואינה חובה על פי דין. הפרטים ישמשו את ש.י.א פתרונות טכנולוגיים בע"מ לצורך טיפול בפנייתך ויצירת קשר. השליחה מתבצעת באמצעות WhatsApp. לפרטים נוספים, לרבות זכויות עיון ותיקון במידע, ראו <a href="privacy-policy.html">מדיניות הפרטיות</a>.</p>
         <button type="submit" form="leadForm" class="btn btn-primary" style="width:100%; justify-content:center;">שליחת הפרטים דרך WhatsApp</button>
       </div>
     </div>
@@ -1226,6 +1271,11 @@
       <a href="#contact">יצירת קשר</a>
     </div>
   </div>
+  <div class="footer-legal">
+    <a href="accessibility-statement.html">הצהרת נגישות</a>
+    <span aria-hidden="true">|</span>
+    <a href="privacy-policy.html">מדיניות פרטיות</a>
+  </div>
   <div class="footer-fine">© S.Y.E TECHNOLOGICAL SOLUTIONS LTD, כל הזכויות שמורות</div>
 </footer>
 
@@ -1239,15 +1289,29 @@
   // mobile menu
   const burger = document.getElementById('burgerBtn');
   const panel = document.getElementById('mobilePanel');
+  function closeMobilePanel(returnFocus){
+    panel.classList.remove('open'); burger.classList.remove('open');
+    burger.setAttribute('aria-expanded','false');
+    if (returnFocus) burger.focus();
+  }
   burger.addEventListener('click', () => {
     const open = panel.classList.toggle('open');
     burger.classList.toggle('open', open);
     burger.setAttribute('aria-expanded', open ? 'true':'false');
   });
-  panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    panel.classList.remove('open'); burger.classList.remove('open');
-    burger.setAttribute('aria-expanded','false');
-  }));
+  panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => closeMobilePanel(false)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && panel.classList.contains('open')) closeMobilePanel(true);
+  });
+
+  // hero video: respect reduced-motion preference
+  const heroVideo = document.querySelector('.hero-video');
+  if (heroVideo) {
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const applyMotionPref = () => { if (motionQuery.matches) heroVideo.pause(); else heroVideo.play().catch(() => {}); };
+    applyMotionPref();
+    motionQuery.addEventListener('change', applyMotionPref);
+  }
 
   // reveal on scroll
   const io = new IntersectionObserver((entries) => {
@@ -1258,10 +1322,12 @@
   // project filters
   const filterBtns = document.querySelectorAll('.filter-btn');
   const cards = document.querySelectorAll('.proj-card');
+  filterBtns.forEach(btn => btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false'));
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      filterBtns.forEach(b => b.classList.remove('active'));
+      filterBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
       btn.classList.add('active');
+      btn.setAttribute('aria-pressed','true');
       const f = btn.dataset.filter;
       cards.forEach(c => {
         const show = f === 'all' || c.dataset.cat.split(' ').includes(f);
@@ -1272,11 +1338,19 @@
   // lead form -> WhatsApp
   const leadForm = document.getElementById('leadForm');
   if (leadForm) {
+    const setFieldError = (input, errorEl, hasError) => {
+      input.setAttribute('aria-invalid', hasError ? 'true' : 'false');
+      errorEl.hidden = !hasError;
+    };
     leadForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const name = leadForm.name.value.trim();
       const phone = leadForm.phone.value.trim();
       const msg = leadForm.message.value.trim();
+      const nameError = document.getElementById('leadNameError');
+      const phoneError = document.getElementById('leadPhoneError');
+      setFieldError(leadForm.name, nameError, !name);
+      setFieldError(leadForm.phone, phoneError, !phone);
       if (!name || !phone) {
         if (!name) leadForm.name.focus(); else leadForm.phone.focus();
         return;
