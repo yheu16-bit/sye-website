@@ -182,7 +182,7 @@
     justify-self:start;
   }
   .brand img{height:36px; width:auto; flex:none; object-fit:contain;}
-  .brand-text{display:flex; flex-direction:column; line-height:1.2; min-width:0; white-space:nowrap;}
+  .brand-text{display:flex; flex-direction:column; line-height:1.2; min-width:0;}
   .brand-text b{font-size:1rem; letter-spacing:0.01em;}
   .brand-text span{font-family:'Space Mono',monospace; font-size:0.58rem; letter-spacing:0.1em; color:var(--accent-light); text-transform:uppercase;}
 
@@ -785,10 +785,66 @@
     *{ animation:none !important; transition:none !important; }
     .reveal{ opacity:1; transform:none; }
   }
+
+  /* Accessibility widget (custom-built; no third-party overlay script) */
+  .a11y-toggle{
+    position:fixed; bottom:20px; left:20px; z-index:300;
+    width:48px; height:48px; border-radius:50%;
+    background:var(--accent); color:#fff; border:2px solid #fff;
+    box-shadow:0 2px 10px rgba(0,0,0,0.25);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; padding:0;
+  }
+  .a11y-toggle:hover, .a11y-toggle:focus-visible{ background:var(--accent-light); }
+  .a11y-toggle svg{ width:26px; height:26px; }
+  .a11y-panel{
+    position:fixed; bottom:78px; left:20px; z-index:300;
+    width:260px; max-width:calc(100vw - 40px);
+    background:#fff; color:var(--ink); border-radius:8px;
+    box-shadow:0 8px 28px rgba(0,0,0,0.3);
+    padding:1rem;
+  }
+  .a11y-panel[hidden]{ display:none; }
+  .a11y-panel h2{ font-size:1rem; margin:0 0 0.75rem; color:var(--navy); }
+  .a11y-row{ display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:0.6rem; }
+  .a11y-row span{ font-size:0.9rem; color:var(--ink); }
+  .a11y-btns{ display:flex; gap:0.4rem; }
+  .a11y-btns button, .a11y-contrast-btn, .a11y-close{
+    border:1px solid var(--line); background:var(--paper); color:var(--ink);
+    border-radius:4px; padding:0.3rem 0.6rem; cursor:pointer; font-size:0.9rem; font-family:inherit;
+  }
+  .a11y-btns button:hover, .a11y-contrast-btn:hover, .a11y-close:hover{ background:var(--accent); color:#fff; border-color:var(--accent); }
+  .a11y-contrast-btn[aria-pressed="true"]{ background:var(--navy); color:#fff; border-color:var(--navy); }
+  .a11y-close{ display:block; margin-top:0.5rem; width:100%; text-align:center; }
+
+  :root.a11y-contrast{
+    --navy:#000000; --navy-2:#000000; --steel:#000000; --steel-light:#000000;
+    --paper:#FFFFFF; --white:#FFFFFF; --ink:#000000;
+    --accent:#0040FF; --accent-light:#FFD400;
+    --line: rgba(0,0,0,0.5); --line-dark: rgba(255,255,255,0.5);
+  }
 </style>
 </head>
 <body>
 <a href="#top" class="skip-link">Skip to main content</a>
+
+<button type="button" id="a11yToggle" class="a11y-toggle" aria-expanded="false" aria-controls="a11yPanel" aria-label="Open accessibility options"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="5" r="2.2" fill="currentColor"/><path d="M12 8c-3 0-7 1-7 3v1h5l1 9h2l1-9h5v-1c0-2-4-3-7-3z" fill="currentColor"/></svg></button>
+<div id="a11yPanel" class="a11y-panel" role="region" aria-label="Accessibility settings" hidden>
+  <h2>Accessibility Settings</h2>
+  <div class="a11y-row">
+    <span>Text Size</span>
+    <div class="a11y-btns">
+      <button type="button" id="a11yDec" aria-label="Decrease text size">A-</button>
+      <button type="button" id="a11yReset" aria-label="Reset text size">A</button>
+      <button type="button" id="a11yInc" aria-label="Increase text size">A+</button>
+    </div>
+  </div>
+  <div class="a11y-row">
+    <span>High Contrast</span>
+    <button type="button" id="a11yContrast" class="a11y-contrast-btn" aria-pressed="false">Enable</button>
+  </div>
+  <button type="button" id="a11yClose" class="a11y-close">Close</button>
+</div>
 
 <header id="siteHeader">
   <div class="wrap nav-inner">
@@ -1398,5 +1454,72 @@
 
 </script>
 
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var FONT_KEY = 'sye-a11y-fontsize';
+  var CONTRAST_KEY = 'sye-a11y-contrast';
+  var MIN = 1, MAX = 3;
+  function applyFontStep(step){
+    root.style.fontSize = step === 1 ? '' : (100 + (step - 1) * 12) + '%';
+  }
+  function getStep(){
+    var v = parseInt(localStorage.getItem(FONT_KEY), 10);
+    return (v >= MIN && v <= MAX) ? v : 1;
+  }
+  function setStep(v){
+    v = Math.max(MIN, Math.min(MAX, v));
+    try { localStorage.setItem(FONT_KEY, v); } catch(e){}
+    applyFontStep(v);
+  }
+  function getContrast(){
+    try { return localStorage.getItem(CONTRAST_KEY) === '1'; } catch(e){ return false; }
+  }
+  function setContrast(on){
+    root.classList.toggle('a11y-contrast', on);
+    try { localStorage.setItem(CONTRAST_KEY, on ? '1' : '0'); } catch(e){}
+    var btn = document.getElementById('a11yContrast');
+    if (btn) btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  try { applyFontStep(getStep()); } catch(e){}
+  try { setContrast(getContrast()); } catch(e){}
+
+  document.addEventListener('DOMContentLoaded', function(){
+    var toggle = document.getElementById('a11yToggle');
+    var panel = document.getElementById('a11yPanel');
+    var closeBtn = document.getElementById('a11yClose');
+    var incBtn = document.getElementById('a11yInc');
+    var decBtn = document.getElementById('a11yDec');
+    var resetBtn = document.getElementById('a11yReset');
+    var contrastBtn = document.getElementById('a11yContrast');
+    if (!toggle || !panel) return;
+
+    contrastBtn.setAttribute('aria-pressed', getContrast() ? 'true' : 'false');
+
+    function openPanel(){
+      panel.hidden = false;
+      toggle.setAttribute('aria-expanded', 'true');
+      closeBtn.focus();
+    }
+    function closePanel(returnFocus){
+      panel.hidden = true;
+      toggle.setAttribute('aria-expanded', 'false');
+      if (returnFocus) toggle.focus();
+    }
+    toggle.addEventListener('click', function(){
+      if (panel.hidden) openPanel(); else closePanel(true);
+    });
+    closeBtn.addEventListener('click', function(){ closePanel(true); });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && !panel.hidden) closePanel(true);
+    });
+    incBtn.addEventListener('click', function(){ setStep(getStep() + 1); });
+    decBtn.addEventListener('click', function(){ setStep(getStep() - 1); });
+    resetBtn.addEventListener('click', function(){ setStep(1); });
+    contrastBtn.addEventListener('click', function(){ setContrast(!getContrast()); });
+  });
+})();
+</script>
 </body>
 </html>
