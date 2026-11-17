@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sye.syetech.workers.dev/sitemap.xml
+Sitemap: https://www.technovate-eng.com/sitemap.xml
